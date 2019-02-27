@@ -10,4 +10,4 @@ workflows:
       - terraform/init
       - terraform/plan:
           requires:
-            - init
+            - terraform/init
