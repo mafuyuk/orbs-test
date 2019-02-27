@@ -1,20 +1,29 @@
 version: 2.1
 
 orbs:
-  terraform: mafuyuk/terraform@dev:dc846cc
-  aws-cli: circleci/aws-cli@0.1.9
+  terraform: mafuyuk/terraform@dev:e9709ed
 
 jobs:
   plan:
     executor: terraform/default
     steps:
       - checkout
-      - terraform/init:
-          path: dir-check
-      - terraform/plan:
-          path: dir-check
+      - terraform/init
+      - terraform/plan
+  apply:
+    executor: terraform/default
+    steps:
+      - checkout
+      - terraform/plan
 
 workflows:
-  test:
+  deploy:
     jobs:
       - plan
+      - hold:
+          type: approval
+          requires:
+            - plan
+      - apply:
+          requires:
+            - hold
