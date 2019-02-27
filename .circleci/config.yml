@@ -7,7 +7,9 @@ orbs:
 workflows:
   test:
     jobs:
-      - terraform/init
+      - terraform/init:
+          path: dir-check
       - terraform/plan:
+          path: dir-check
           requires:
             - terraform/init
