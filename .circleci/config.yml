@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  terraform: mafuyuk/terraform@dev:d7565bd
+  terraform: mafuyuk/terraform@dev:df1e9ba
   aws-cli: circleci/aws-cli@0.1.9
 
 workflows:
