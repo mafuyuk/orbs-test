@@ -1,0 +1,10 @@
+version: 2.1
+
+orbs:
+  terraform: mafuyuk/terraform@dev:9cdb3f7
+  aws-cli: circleci/aws-cli@0.1.9
+
+workflows:
+  test:
+    jobs:
+      - terraform/init
