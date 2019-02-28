@@ -10,7 +10,7 @@ workflows:
       - hold:
           type: approval
           requires:
-            - plan
+            - terraform/plan
       - terraform/apply:
           requires:
             - hold
