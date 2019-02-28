@@ -1,29 +1,16 @@
 version: 2.1
 
 orbs:
-  terraform: mafuyuk/terraform@dev:e9709ed
-
-jobs:
-  plan:
-    executor: terraform/default
-    steps:
-      - checkout
-      - terraform/init
-      - terraform/plan
-  apply:
-    executor: terraform/default
-    steps:
-      - checkout
-      - terraform/apply
+  terraform: mafuyuk/terraform@dev:d6c5008
 
 workflows:
   deploy:
     jobs:
-      - plan
+      - terraform/plan
       - hold:
           type: approval
           requires:
             - plan
-      - apply:
+      - terraform/apply:
           requires:
             - hold
