@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  terraform: mafuyuk/terraform@0.0.1
+  terraform: mafuyuk/terraform@dev:3dfb2fe
 
 workflows:
   deploy:
