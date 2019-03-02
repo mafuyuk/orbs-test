@@ -1,18 +1,19 @@
 version: 2.1
 
 orbs:
-  terraform: mafuyuk/terraform@dev:8ceb406
+  terraform: mafuyuk/terraform@dev:e02bdc0
 
 workflows:
   deploy:
     jobs:
       - terraform/plan:
           workspace: stg
+          is-destroy: true
       - hold:
           type: approval
           requires:
             - terraform/plan
-      - terraform/apply:
+      - terraform/destroy:
           workspace: stg
           requires:
             - hold
