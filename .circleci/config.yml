@@ -7,13 +7,30 @@ workflows:
   deploy:
     jobs:
       - terraform/plan:
+          name: plan1
           workspace: stg
-          is-destroy: true
       - hold:
+          name: hold1
           type: approval
           requires:
-            - terraform/plan
+            - plan1
+      - terraform/apply:
+          name: apply
+          workspace: stg
+          requires:
+            - hold1
+      - terraform/plan:
+          name: plan2
+          workspace: stg
+          is-destroy: true
+          requires:
+            - apply
+      - hold:
+          name: hold2
+          type: approval
+          requires:
+            - plan2
       - terraform/destroy:
           workspace: stg
           requires:
-            - hold
+            - hold2
