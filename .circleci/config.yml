@@ -30,7 +30,7 @@ workflows:
           type: approval
           requires:
             - plan2
-      - terraform/destroy:
+      - terraform/apply:
           workspace: stg
           requires:
             - hold2
