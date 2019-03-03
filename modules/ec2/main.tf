@@ -8,4 +8,5 @@ resource "aws_instance" "foo" {
   tags = {
     Name = "HelloWorld"
   }
+  a=[]
 }
