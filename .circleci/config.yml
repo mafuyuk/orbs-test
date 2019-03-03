@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  terraform: mafuyuk/terraform@dev:4214e40
+  terraform: mafuyuk/terraform@dev:5448862
 
 workflows:
   deploy:
@@ -9,28 +9,18 @@ workflows:
       - terraform/plan:
           name: plan1
           workspace: stg
-      - hold:
-          name: hold1
-          type: approval
-          requires:
-            - plan1
       - terraform/apply:
           name: apply
           workspace: stg
           requires:
-            - hold1
+            - plan1
       - terraform/plan:
           name: plan2
           workspace: stg
           is-destroy: true
           requires:
             - apply
-      - hold:
-          name: hold2
-          type: approval
-          requires:
-            - plan2
       - terraform/apply:
           workspace: stg
           requires:
-            - hold2
+            - plan2
