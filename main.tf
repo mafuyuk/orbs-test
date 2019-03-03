@@ -1,12 +1,3 @@
-#####################################
-# EC2
-#####################################
-resource "aws_instance" "foo" {
-  ami           = "ami-1853ac65"
-  instance_type = "t2.micro"
-
-  tags = {
-    Name = "HelloWorld"
-  }
-  a = []
+module "ec2" {
+  source = "modules/ec2"
 }
