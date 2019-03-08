@@ -1,38 +1,15 @@
 version: 2.1
 orbs:
-  terraform: mafuyuk/terraform@0.6.1
+  terraform: mafuyuk/terraform@dev:f69775b
 workflows:
-  build:
+  verification:
+    jobs:
+      - terraform/fmt
+      - terraform/validate
+  nightry:
     triggers:
       - schedule:
-          cron: "0 1 * * *"
+          cron: "*/10 * * * *"
     jobs:
+      - terraform/fmt
       - terraform/validate
-      - terraform/plan:
-          name: stg-plan
-          workspace: stg
-          filters:
-            branches:
-              only: master
-          requires:
-            - terraform/validate
-      - terraform/plan:
-          name: prod-plan
-          filters:
-            tags:
-              only: /v.*/
-          requires:
-            - terraform/validate
-      - approval:
-          requires:
-            - prod-plan
-          type: approval
-      - terraform/apply:
-          name: stg-apply
-          requires:
-            - stg-plan
-          workspace: stg
-      - terraform/apply:
-          name: prod-apply
-          requires:
-            - approval
