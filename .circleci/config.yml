@@ -4,16 +4,26 @@ orbs:
 workflows:
   verification:
     jobs:
-      - terraform/fmt
-      - terraform/validate
+      - terraform/init
+      - terraform/fmt:
+          requires:
+            - terraform/init
+      - terraform/validate:
+          requires:
+            - terraform/init
   nightry:
     triggers:
       - schedule:
-          cron: "0 0 * * *"
+          cron: "0 1 * * *"
           filters:
             branches:
               only:
                 - master
     jobs:
-      - terraform/fmt
-      - terraform/validate
+      - terraform/init
+      - terraform/fmt:
+          requires:
+            - terraform/init
+      - terraform/validate:
+          requires:
+            - terraform/init
