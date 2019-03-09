@@ -1,26 +1,42 @@
 version: 2.1
-
 orbs:
-  terraform: mafuyuk/terraform@dev:dcfe319
+  terraform: mafuyuk/terraform@dev:a0c4f4e
+
+master_filter: &master_filter
+  branches:
+    only: master
+
+terraform_executor: &terraform_executor
+  name: terraform/default
+  tag: 0.11.11
 
 workflows:
-  deploy:
+  build:
     jobs:
+      - terraform/init:
+          executor: *terraform_executor
+          workspace: stg
+          filters: *master_filter
+      - terraform/fmt:
+          executor: *terraform_executor
+          requires:
+            - terraform/init
+          filters: *master_filter
+      - terraform/validate:
+          executor: *terraform_executor
+          requires:
+            - terraform/init
+          filters: *master_filter
       - terraform/plan:
-          name: plan1
+          executor: *terraform_executor
           workspace: stg
+          requires:
+            - terraform/fmt
+            - terraform/validate
+          filters: *master_filter
       - terraform/apply:
-          name: apply
+          executor: *terraform_executor
           workspace: stg
           requires:
-            - plan1
-      - terraform/plan:
-          name: plan2
-          workspace: stg
-          is-destroy: true
-          requires:
-            - apply
-      - terraform/apply:
-          workspace: stg
-          requires:
-            - plan2
+            - terraform/plan
+          filters: *master_filter
