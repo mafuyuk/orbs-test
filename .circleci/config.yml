@@ -2,39 +2,41 @@ version: 2.1
 orbs:
   terraform: mafuyuk/terraform@dev:b601ef1
 
+master_filter: &master_filter
+  branches:
+    only: master
+
 terraform_executor: &terraform_executor
   name: terraform/default
   tag: 0.11.11
 
 workflows:
-  verification:
+  build:
     jobs:
       - terraform/init:
           executor: *terraform_executor
+          workspace: stg
+          filters: *master_filter
       - terraform/fmt:
           executor: *terraform_executor
           requires:
             - terraform/init
+          filters: *master_filter
       - terraform/validate:
           executor: *terraform_executor
           requires:
             - terraform/init
-  nightry:
-    triggers:
-      - schedule:
-          cron: "0 1 * * *"
-          filters:
-            branches:
-              only:
-                - master
-    jobs:
-      - terraform/init:
+          filters: *master_filter
+      - terraform/plan:
           executor: *terraform_executor
-      - terraform/fmt:
-          executor: *terraform_executor
+          workspace: stg
           requires:
-            - terraform/init
-      - terraform/validate:
+            - terraform/fmt
+            - terraform/validate
+          filters: *master_filter
+      - terraform/apply:
           executor: *terraform_executor
+          workspace: stg
           requires:
-            - terraform/init
+            - terraform/plan
+          filters: *master_filter
