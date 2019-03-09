@@ -24,7 +24,7 @@ workflows:
               only:
                 - master
     jobs:
-      - terraform/init:
+      - terraform/init
       - terraform/fmt:
           requires:
             - terraform/init
