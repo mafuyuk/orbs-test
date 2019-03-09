@@ -11,13 +11,13 @@ workflows:
   verification:
     jobs:
       - terraform/init:
-          executor: *terraform_executor
+          *terraform_executor
       - terraform/fmt:
-          executor: *terraform_executor
+          *terraform_executor
           requires:
             - terraform/init
       - terraform/validate:
-          executor: *terraform_executor
+          *terraform_executor
           requires:
             - terraform/init
   nightry:
@@ -30,12 +30,12 @@ workflows:
                 - master
     jobs:
       - terraform/init:
-          executor: *terraform_executor
+          *terraform_executor
       - terraform/fmt:
-          executor: *terraform_executor
+          *terraform_executor
           requires:
             - terraform/init
       - terraform/validate:
-          executor: *terraform_executor
+          *terraform_executor
           requires:
             - terraform/init
