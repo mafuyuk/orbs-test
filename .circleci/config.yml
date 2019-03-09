@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  terraform: mafuyuk/terraform@dev:b601ef1
+  terraform: mafuyuk/terraform@dev:a0c4f4e
 
 master_filter: &master_filter
   branches:
