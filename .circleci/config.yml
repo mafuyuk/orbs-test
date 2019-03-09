@@ -2,8 +2,8 @@ version: 2.1
 orbs:
   terraform: mafuyuk/terraform@dev:b601ef1
 
-terraform_executor: &terraform_executor
-  executor:
+executors:
+  terraform:
     name: terraform/default
     tag: 0.11.11
 
@@ -11,13 +11,11 @@ workflows:
   verification:
     jobs:
       - terraform/init:
-          *terraform_executor
+          executor: terraform
       - terraform/fmt:
-          *terraform_executor
           requires:
             - terraform/init
       - terraform/validate:
-          *terraform_executor
           requires:
             - terraform/init
   nightry:
@@ -30,12 +28,9 @@ workflows:
                 - master
     jobs:
       - terraform/init:
-          *terraform_executor
       - terraform/fmt:
-          *terraform_executor
           requires:
             - terraform/init
       - terraform/validate:
-          *terraform_executor
           requires:
             - terraform/init
