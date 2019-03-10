@@ -6,11 +6,11 @@ master_filter: &master_filter
   branches:
     only: master
 
-tag_filter: &tag_filter
+release_filter: &release_filter
+  tags:
+    only: /^v[0-9](\.[0-9]){2}$/
   branches:
     ignore: /.*/
-  tags:
-    only: '/^v[0-9](\.[0-9]){2}$/'
 
 terraform_executor: &terraform_executor
   name: terraform/default
@@ -19,13 +19,19 @@ terraform_executor: &terraform_executor
 workflows:
   integration:
     jobs:
-      - terraform/init
+      - terraform/init:
+          name: init
+          executor: *terraform_executor
       - terraform/fmt:
+          name: fmt
+          executor: *terraform_executor
           requires:
-            - terraform/init
+            - init
       - terraform/validate:
+          name: validate
+          executor: *terraform_executor
           requires:
-            - terraform/init
+            - init
   delivery:
     jobs:
       - terraform/init:
@@ -61,33 +67,38 @@ workflows:
     jobs:
       - terraform/init:
           name: init
-          filters: *tag_filter
+          executor: *terraform_executor
+          filters: *release_filter
       - terraform/fmt:
           name: fmt
-          filters: *tag_filter
-          requires:
-            - terraform/init
-      - terraform/validate:
-          name: validate
-          filters: *tag_filter
+          executor: *terraform_executor
           requires:
             - init
+          filters: *release_filter
+      - terraform/validate:
+          name: validate
+          executor: *terraform_executor
+          requires:
+            - init
+          filters: *release_filter
       - terraform/plan:
           name: plan
-          filters: *tag_filter
+          executor: *terraform_executor
           requires:
             - fmt
             - validate
+          filters: *release_filter
       - hold:
-          filters: *tag_filter
+          type: approval
           requires:
             - plan
-          type: approval
+          filters: *release_filter
       - terraform/apply:
           name: apply
-          filters: *tag_filter
+          executor: *terraform_executor
           requires:
             - hold
+          filters: *release_filter
   nightry:
     jobs:
       - terraform/init
