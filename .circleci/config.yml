@@ -88,7 +88,7 @@ workflows:
             - fmt
             - validate
           filters: *release_filter
-      - hold:
+      - approval:
           type: approval
           requires:
             - plan
@@ -97,7 +97,7 @@ workflows:
           name: apply
           executor: *terraform_executor
           requires:
-            - hold
+            - approval
           filters: *release_filter
   nightry:
     jobs:
