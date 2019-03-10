@@ -57,7 +57,7 @@ workflows:
             - validate
           filters: *master_filter
       - terraform/apply:
-          name: plan
+          name: apply
           executor: *terraform_executor
           workspace: stg
           requires:
