@@ -11,32 +11,37 @@ terraform_executor: &terraform_executor
   tag: 0.11.11
 
 workflows:
-  build:
+  delivery:
     jobs:
       - terraform/init:
+          name: init
           executor: *terraform_executor
           workspace: stg
           filters: *master_filter
       - terraform/fmt:
+          name: fmt
           executor: *terraform_executor
           requires:
-            - terraform/init
+            - init
           filters: *master_filter
       - terraform/validate:
+          name: validate
           executor: *terraform_executor
           requires:
-            - terraform/init
+            - init
           filters: *master_filter
       - terraform/plan:
+          name: plan
           executor: *terraform_executor
           workspace: stg
           requires:
-            - terraform/fmt
-            - terraform/validate
+            - fmt
+            - validate
           filters: *master_filter
       - terraform/apply:
+          name: plan
           executor: *terraform_executor
           workspace: stg
           requires:
-            - terraform/plan
+            - plan
           filters: *master_filter
